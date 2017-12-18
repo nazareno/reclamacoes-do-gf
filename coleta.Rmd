@@ -1,0 +1,84 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+Esse é um relatório. 
+
+```{r message=FALSE}
+library(tidyverse)
+library(rvest)
+```
+
+```{r}
+# lista_orgaos = "https://cidadao.reclameaqui.com.br/busca/?cx=008144464031947637647%3A7airzwxfigw&cof=FORID%3A10&ie=UTF-8&q=br&id=&BuscaTipo=E"
+lista_orgaos = "https://cidadao.reclameaqui.com.br/busca/?cx=008144464031947637647%3A7airzwxfigw&cof=FORID%3A10&ie=UTF-8&q=minist%C3%A9rio&id=&BuscaTipo=E"
+
+lista_html = read_html(lista_orgaos) %>% 
+    html_nodes("#box_resultado ul li") 
+
+links_orgaos = lista_html %>%  
+    map_df(~ tibble(orgao = html_text(.), 
+                    link = html_nodes(., "a")[[2]] %>% html_attr('href'))) 
+```
+
+```{r}
+reclamacoes = links_orgaos %>% 
+    filter(grepl("BR", orgao)) %>% 
+    pmap( ~ {read_html(.y) %>% html_nodes("#lista_reclamacoes td a") %>% html_attr('href')})
+```
+
+
+Amostra os links para reclamações
+
+```{r}
+set.seed(123)
+amostra_reclamacoes <- function(d){
+    r = d[grepl("reclameaqui", d) & !grepl("lista_reclamacoes|indices", d)]
+    if(length(r) < 5){
+        return(c())
+    }
+    return(sample(r, 5))
+}
+
+rec_df = reclamacoes %>% 
+    map_df(~ tibble(orgao = .[grepl("gov.br", .)][1], 
+                    link = list(amostra_reclamacoes(.)))) %>% 
+    filter(!map_lgl(link, is.null)) %>% 
+    unnest(link) 
+    
+```
+
+Pega as reclamações de fato
+
+```{r}
+pega_textos = function(link){
+    read_html(link) %>% html_nodes("section p") %>% map(html_text)
+}
+
+rec_completo = rec_df %>% 
+    group_by(link) %>% 
+    mutate(titulo = pega_textos(link)[3],
+           reclamacao = pega_textos(link)[4])
+
+
+rec_completo %>% 
+    unnest(titulo, reclamacao) %>% 
+    write_csv("amostra-de-reclamacoes.csv")
+
+set.seed(321) 
+rec_completo %>% 
+    ungroup() %>% 
+    unnest(titulo, reclamacao) %>% 
+    sample_n(15) %>% 
+    write_csv("amostra-10-de-reclamacoes.csv")
+
+```
+
+
+```{r}
+set.seed(333)
+rec_completo[sample(1:95, 5), c("titulo", "reclamacao")]  %>%  unnest()
+```
+
+
