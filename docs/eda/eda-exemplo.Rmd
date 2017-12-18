@@ -1,0 +1,70 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r warning=FALSE}
+library(tidyverse)
+```
+
+# EDA dos dados de estimativa de insatisfação
+
+## Subtítulo
+
+Dados coletados na sala. 
+
+```{r}
+avaliacoes = read_csv("../../data/experimento-avaliacao-humana/experimento-de-avaliacao.csv", 
+                      col_types = "ccd")
+
+avaliacoes = avaliacoes %>% 
+    select(avaliador = `Sua matrícula`, 
+           id_reclamacao = `Id da reclamação`, 
+           insatisfacao = Insatisfação)
+
+glimpse(avaliacoes)
+```
+
+## Limpeza
+
+Explicar
+
+```{r}
+avaliacoes = avaliacoes %>% 
+    filter(! (id_reclamacao %in% 1:5 ))
+```
+
+
+## Outro subtítulo
+
+```{r}
+avaliacoes %>% 
+    group_by(id_reclamacao) %>% 
+    count() %>% 
+    ggplot(aes("reclamacoes", n)) + 
+    geom_jitter(width = .05, alpha = .7)
+
+avaliacoes %>% 
+    group_by(id_reclamacao) %>% 
+    count() %>%
+    ungroup() %>% 
+    summarise(media = mean(n), 
+              mediana = median(n))
+
+```
+
+```{r}
+avaliacoes %>% 
+    ggplot(aes(x = reorder(id_reclamacao, insatisfacao, fun = median), y = insatisfacao)) + 
+    geom_boxplot() #+     geom_jitter(width = .1, alpha = .7)
+
+```
+
+
+```{r}
+avaliacoes %>% 
+    group_by(id_reclamacao) %>% 
+    ggplot(aes(reorder(id_reclamacao, insatisfacao,FUN = median), insatisfacao, colour = id_reclamacao)) + 
+    geom_jitter()
+```
+
