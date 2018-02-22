@@ -12,9 +12,11 @@ library(broom)
 theme_set(theme_bw())
 ```
 
+## Os dados
+
 ```{r carrega}
 reclamacoes_raw = read_csv(here("data/reclamacoes-raw/reclamacoes-raw.csv"))
-avaliacoes_raw = read_csv(here("data/avaliacoes/avaliacoes-20180221.csv"))
+avaliacoes_raw = read_csv(here("data/avaliacoes/avaliacoes-20180222.csv"))
 sentimentos = read_csv(here("data/sentimentos/sentimento.csv"))
 
 reclamacoes_raw = reclamacoes_raw %>% 
@@ -22,6 +24,8 @@ reclamacoes_raw = reclamacoes_raw %>%
            comprimento_reclamacao = str_length(reclamacao), 
            nome_orgao = str_split(link, "/") %>% map_chr(~ .[[5]]))
 ```
+
+`reclamacoes_l` tem um formato long em vez de wide (explicado [aqui](https://sejdemyr.github.io/r-tutorials/basics/wide-and-long/)).
 
 ```{r junta}
 avaliacoes = avaliacoes_raw %>% 
@@ -33,32 +37,18 @@ reclamacoes = reclamacoes_raw %>%
     inner_join(avaliacoes, by = c("id" = "id_reclamação")) %>% 
     left_join(sentimentos, by = "id")
 
-```
-
-```{r}
-reclamacoes %>% 
-    ggplot(aes(x = sentimento_op30, y = sentimento_sent)) + 
-    geom_abline(slope = 1, intercept = 0, color = "grey") + 
-    geom_count(alpha = .7) 
-```
-
-```{r}
 reclamacoes_l = reclamacoes %>%  
     select(-palavras_op30, -palavras_sent) %>% 
     gather(key = "lexico", 
            value = "polaridade", 
            sentimento_op30, sentimento_sent)
 
-reclamacoes_l %>% 
-    ggplot(aes(x = insatisfação, y = polaridade_normalizada, group = insatisfação)) + 
-    geom_jitter(alpha = .7)  + 
-    facet_wrap(~ lexico)
 ```
 
 Converte polaridades para escala 0-5
 
 ```{r}
-# Faça você mesmo. Crie uma ploaridade_normalizada
+# Faça você mesmo. Crie a variável polaridade_normalizada
 # reclamacoes_l = reclamacoes_l %>% 
 #     group_by(lexico) %>% 
 #     mutate(polaridade_normalizada = ALGOAQUI)
@@ -71,9 +61,38 @@ reclamacoes_l = reclamacoes_l %>%
     mutate(erro = (insatisfação - polaridade_normalizada)**2)
 ```
 
+
+## EDA
+
+Inicial. Faça os gráficos a mais que achar necessário para entender os dados que temos de resultado.
+
+```{r}
+reclamacoes %>% 
+    ggplot(aes(x = sentimento_op30, y = sentimento_sent)) + 
+    geom_abline(slope = 1, intercept = 0, color = "grey") + 
+    geom_count(alpha = .7) 
+```
+
+```{r}
+reclamacoes_l %>% 
+    ggplot(aes(x = insatisfação, y = polaridade_normalizada, group = insatisfação)) + 
+    geom_jitter(alpha = .7)  + 
+    facet_wrap(~ lexico)
+
+reclamacoes_l %>% 
+    ggplot(aes(x = insatisfação, y = erro, group = insatisfação)) + 
+    geom_jitter(alpha = .5)  +
+    # geom_boxplo() + 
+    facet_wrap(~ lexico)
+```
+
+
+## Há relação entre o léxico e a precisão/erro?
+
 Agora um modelo para responder sua pergunta.
 
 ```{r}
+
 ```
 
 **Dica** - o texto de resultado que queremos produzir é algo como: 
