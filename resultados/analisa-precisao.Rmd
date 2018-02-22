@@ -1,0 +1,89 @@
+---
+title: "Análise da precisão"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(here)
+library(modelr)
+library(broom)
+
+theme_set(theme_bw())
+```
+
+```{r carrega}
+reclamacoes_raw = read_csv(here("data/reclamacoes-raw/reclamacoes-raw.csv"))
+avaliacoes_raw = read_csv(here("data/avaliacoes/avaliacoes-20180221.csv"))
+sentimentos = read_csv(here("data/sentimentos/sentimento.csv"))
+
+reclamacoes_raw = reclamacoes_raw %>% 
+    mutate(id = 1:n(), 
+           comprimento_reclamacao = str_length(reclamacao), 
+           nome_orgao = str_split(link, "/") %>% map_chr(~ .[[5]]))
+```
+
+```{r junta}
+avaliacoes = avaliacoes_raw %>% 
+    group_by(id_reclamação) %>% 
+    summarise(insatisfação = median(insatisfação), 
+              avaliadores = n())
+
+reclamacoes = reclamacoes_raw %>% 
+    inner_join(avaliacoes, by = c("id" = "id_reclamação")) %>% 
+    left_join(sentimentos, by = "id")
+
+```
+
+```{r}
+reclamacoes %>% 
+    ggplot(aes(x = sentimento_op30, y = sentimento_sent)) + 
+    geom_abline(slope = 1, intercept = 0, color = "grey") + 
+    geom_count(alpha = .7) 
+```
+
+```{r}
+reclamacoes_l = reclamacoes %>%  
+    select(-palavras_op30, -palavras_sent) %>% 
+    gather(key = "lexico", 
+           value = "polaridade", 
+           sentimento_op30, sentimento_sent)
+
+reclamacoes_l %>% 
+    ggplot(aes(x = insatisfação, y = polaridade_normalizada, group = insatisfação)) + 
+    geom_jitter(alpha = .7)  + 
+    facet_wrap(~ lexico)
+```
+
+Converte polaridades para escala 0-5
+
+```{r}
+# Faça você mesmo. Crie uma ploaridade_normalizada
+# reclamacoes_l = reclamacoes_l %>% 
+#     group_by(lexico) %>% 
+#     mutate(polaridade_normalizada = ALGOAQUI)
+```
+
+Calcula o erro por reclamação
+
+```{r}
+reclamacoes_l = reclamacoes_l %>% 
+    group_by(lexico) %>% 
+    mutate(polaridade_normalizada = (5 - (polaridade - min(polaridade)) / (max(polaridade) - min(polaridade)) * 5))
+
+reclamacoes_l = reclamacoes_l %>% 
+    mutate(erro = (insatisfação - polaridade_normalizada)**2)
+```
+
+
+```{r}
+reclamacoes_l %>% 
+    group_by(lexico) %>% 
+    summarise(mean(erro))
+
+glance(lm(insatisfação ~ sentimento_op30, data = reclamacoes))
+glance(lm(insatisfação ~ sentimento_sent, data = reclamacoes))
+
+glance(lm(insatisfação ~ sentimento_sent + sentimento_op30 + palavras, data = filter(reclamacoes, sentimento_op30 < 10)))
+```
+
