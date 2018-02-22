@@ -68,22 +68,11 @@ Calcula o erro por reclamação
 
 ```{r}
 reclamacoes_l = reclamacoes_l %>% 
-    group_by(lexico) %>% 
-    mutate(polaridade_normalizada = (5 - (polaridade - min(polaridade)) / (max(polaridade) - min(polaridade)) * 5))
-
-reclamacoes_l = reclamacoes_l %>% 
     mutate(erro = (insatisfação - polaridade_normalizada)**2)
 ```
 
+Agora um modelo para responder sua pergunta.
 
 ```{r}
-reclamacoes_l %>% 
-    group_by(lexico) %>% 
-    summarise(mean(erro))
-
-glance(lm(insatisfação ~ sentimento_op30, data = reclamacoes))
-glance(lm(insatisfação ~ sentimento_sent, data = reclamacoes))
-
-glance(lm(insatisfação ~ sentimento_sent + sentimento_op30 + palavras, data = filter(reclamacoes, sentimento_op30 < 10)))
 ```
 
