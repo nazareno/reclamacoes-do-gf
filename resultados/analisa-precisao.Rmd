@@ -48,10 +48,30 @@ reclamacoes_l = reclamacoes %>%
 Converte polaridades para escala 0-5
 
 ```{r}
+max1 <- max(subset(reclamacoes_l, lexico == "sentimento_op30")$polaridade)
+max2 <- max(subset(reclamacoes_l, lexico == "sentimento_sent")$polaridade)
 # Faça você mesmo. Crie a variável polaridade_normalizada
-# reclamacoes_l = reclamacoes_l %>% 
-#     group_by(lexico) %>% 
-#     mutate(polaridade_normalizada = ALGOAQUI)
+
+reclamacoes_l = reclamacoes_l %>% 
+     mutate(polaridade_normalizada = 
+                if(lexico == "sentimento_op30") {
+                    return(polaridade - (max1))
+                }else {
+                    return(polaridade - (max2))
+                }
+            )
+
+min1 <- min(subset(reclamacoes_l, lexico == "sentimento_op30")$polaridade_normalizada)
+min2 <- min(subset(reclamacoes_l, lexico == "sentimento_sent")$polaridade_normalizada)
+
+reclamacoes_l = reclamacoes_l %>%
+    mutate(polaridade_normalizada = 
+               if(lexico == "sentimento_op30") {
+                    return((5/min1) * polaridade_normalizada)
+                }else {
+                    return((5/min2) * polaridade_noralizada)
+                }
+    )
 ```
 
 Calcula o erro por reclamação
