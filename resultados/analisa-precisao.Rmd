@@ -3,18 +3,19 @@ title: "Análise da precisão"
 output: html_notebook
 ---
 
-```{r}
+```{r, warning=FALSE}
 library(tidyverse)
 library(here)
 library(modelr)
 library(broom)
+library(caret)
 
 theme_set(theme_bw())
 ```
 
 ## Os dados
 
-```{r carrega}
+```{r carrega, warning=FALSE}
 reclamacoes_raw = read_csv(here("data/reclamacoes-raw/reclamacoes-raw.csv"))
 avaliacoes_raw = read_csv(here("data/avaliacoes/avaliacoes-20180222.csv"))
 sentimentos = read_csv(here("data/sentimentos/sentimento.csv"))
@@ -47,7 +48,7 @@ reclamacoes_l = reclamacoes %>%
 
 Converte polaridades para escala 0-5
 
-```{r}
+```{r, warning=FALSE}
 max1 <- max(subset(reclamacoes_l, lexico == "sentimento_op30")$polaridade)
 max2 <- max(subset(reclamacoes_l, lexico == "sentimento_sent")$polaridade)
 # Faça você mesmo. Crie a variável polaridade_normalizada
