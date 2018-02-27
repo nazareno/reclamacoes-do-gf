@@ -113,14 +113,23 @@ reclamacoes_l %>%
 Agora um modelo para responder sua pergunta.
 
 ```{r}
-fit <- lm(erro ~ insatisfação + polaridade_normalizada, data=reclamacoes_l)
-summary(fit)
+fit <- train(erro ~ lexico + nome_orgao,
+             data = reclamacoes_l,
+             method = "lm")
 
-coefficients(fit)
-anova(fit)
+tidy(fit$finalModel)
+glance(fit$finalModel)
+
+reclamacoes_l$linear_model_pred <- predict(fit, reclamacoes_l)
+
+ggplot(data = reclamacoes_l, aes(x = linear_model_pred,
+                                 y = erro))+
+    labs(x ="Predição", y ="Observado", title ="Erro observado vs predito.") +
+    geom_point(colour = "blue") +
+    geom_abline(colour = "red")
 ```
 
 **Dica** - o texto de resultado que queremos produzir é algo como: 
 
-Regressão múltipla foi utilizada para analisar se VarIndep1 e VarIndep2 tem uma associação significativa com o erro na estimativa de instatisfação da reclemação. Os resultados da regressão indicam que um modelo com os 2 preditores no formato Erro = -0.2158169.insatisfação + -1.6882720.polaridade_normalizada + 7.37066 explicam XX,XX% da variância da variável de resposta (R2 = XX,XX). VarIndep1, medida como/em [unidade ou o que é o 0 e o que é 1] tem uma relação significativa com o erro (b = [yy,yy;  zz,zz], IC com 95%), assim como VarIndep2 medida como [unidade ou o que é o 0 e o que é 1] (b = [yy,yy;  zz,zz], IC com 95%). O aumento de 1 unidade de polaridade_normalizada produz uma mudança -1.68827 de erro.
+Regressão múltipla foi utilizada para analisar se o Léxico e Nome do Orgão tem uma associação significativa com o erro na estimativa de instatisfação da reclemação. Os resultados da regressão indicam que um modelo baseado em tais fatores explicam apenas 9,19% da variância da variável de resposta (R2 = 0,09197). [Ainda por continuar] VarIndep1, medida como/em [unidade ou o que é o 0 e o que é 1] tem uma relação significativa com o erro (b = [yy,yy;  zz,zz], IC com 95%), assim como VarIndep2 medida como [unidade ou o que é o 0 e o que é 1] (b = [yy,yy;  zz,zz], IC com 95%). O aumento de 1 unidade de polaridade_normalizada produz uma mudança -1.68827 de erro.
 
