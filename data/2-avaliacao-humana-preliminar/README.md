@@ -1,0 +1,3 @@
+## Dados do experimento de viabilidade da avaliação de instisfação por humanos
+
+Dados do experimento para avaliar se há concordância na avaliação objetiva do grau de insatisfação em reclamações. `amostra-10-de-reclamacoes.csv` contém a amostra de reclamações de onde tiramos as primeiras 5 para calibração, e as 10 seguintes para serem avaliadas por diversos alunos que participaram dessa calibração. `experimento-de-avaliacao.csv` contém as avaliações dos participantes no experimento. 
