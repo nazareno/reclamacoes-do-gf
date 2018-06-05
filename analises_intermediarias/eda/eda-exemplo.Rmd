@@ -5,7 +5,11 @@ output: html_notebook
 
 ```{r warning=FALSE}
 library(tidyverse)
+library(here)
 ```
+
+
+
 
 # EDA dos dados de estimativa de insatisfação
 
@@ -14,7 +18,7 @@ library(tidyverse)
 Dados coletados na sala. 
 
 ```{r}
-avaliacoes = read_csv("../../data/experimento-avaliacao-humana/experimento-de-avaliacao.csv", 
+avaliacoes = read_csv(here("data/experimento-avaliacao-humana/experimento-de-avaliacao.csv", 
                       col_types = "ccd")
 
 avaliacoes = avaliacoes %>% 
