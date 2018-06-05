@@ -8,7 +8,8 @@ reclamacoes = reclamacoes_raw %>%
         nome_orgao_site = orgao,
         orgao = str_split(link, "/") %>% map_chr(~ .[[5]])
     ) %>% 
-    filter(orgao %in% c("stf-supremo-tribunal-federal", "anac-agencia-nacional-de-aviacao-civil")) %>% 
+    filter(orgao %in% c("inss-ministerio-da-previdencia-social", 
+                        "anac-agencia-nacional-de-aviacao-civil")) %>% 
     mutate(id = 1:n(), 
            grupo_avaliando = id %% 6 + 1)
 
