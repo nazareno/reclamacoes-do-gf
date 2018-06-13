@@ -2,9 +2,9 @@ library(tidyverse)
 library(rvest)
 library(stringr)
 
-#setwd("/Users/raquelvl/Documents/raquel/disciplinas/2018.1/MC/projeto/reclamacoes-do-gf-master/")
+setwd("/Users/raquelvl/Documents/GitHub/reclamacoes-do-gf/")
 
-avaliacoes <- read_csv("data/avaliacoes/avaliacoes-20180610.csv")
+avaliacoes <- read_csv("data/3-avaliacao-humana/avaliacoes-20180610.csv")
 
 glimpse(avaliacoes)
 
@@ -16,14 +16,13 @@ avaliacoes <- avaliacoes %>% select(id.reclamacao, avaliacao) %>%
               group_by(id.reclamacao) %>% 
               summarise(mediana=median(avaliacao))
 
-reclamacoes.avaliadas <- read_csv("data/avaliacoes/reclamacoes-avaliar.csv")
+reclamacoes.avaliadas <- read_csv("data/1-reclamacoes-selecionadas/reclamacoes-avaliadas.csv")
 
 names(reclamacoes.avaliadas)
 names(avaliacoes)
 
-reclamacoes.avaliadas <- reclamacoes.avaliadas %>% select(-X1)
 
 reclamacoes <- left_join(reclamacoes.avaliadas, avaliacoes, 
                          by = c("id" = "id.reclamacao"))
 
-reclamacoes %>%  write_csv("data/reclamacoes-raw/reclamacoes-avaliadas.csv")
+reclamacoes %>%  write_csv("data/1-reclamacoes-selecionadas/reclamacoes-avaliadas.csv")
