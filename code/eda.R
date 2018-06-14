@@ -31,57 +31,75 @@ reclamacoes %>%
 
 avaliacoes <- avaliacoes %>% 
               select(avaliador = `Matricula`, 
-                      id.reclamacao = `ID da reclamação`, 
+                      id = `ID da reclamação`, 
                        insatisfacao = `Grau de insatisfação`)
 
 ## Será que podemos confiar em nossas avaliações humanas?
 
 #alguma avaliação foge dos valores de 1 a 5?
 avaliacoes %>% 
-  filter((id.reclamacao %in% 1:5 ))
+  filter((id %in% 1:5 ))
 
 #quantas avaliações foram feitas por reclamação?
 avaliacoes %>% 
-  group_by(id.reclamacao) %>% 
+  group_by(id) %>% 
   count() %>% 
   ggplot(aes("reclamacoes", n)) + 
   geom_jitter(width = .05, alpha = .7)
 
 # em média, quantas avaliações por reclamação?
 avaliacoes %>% 
-  group_by(id.reclamacao) %>% 
+  group_by(id) %>% 
   count() %>%
   ungroup() %>% 
   summarise(media = mean(n), 
             mediana = median(n))
 
 #mostra número de revisores por reclamação
-avaliacoes %>% group_by(id.reclamacao) %>% 
+avaliacoes %>% group_by(id) %>% 
   summarize(count=n()) %>% 
-  ggplot(aes(x=reorder(id.reclamacao, count), y=count)) + geom_bar(stat = "identity")
+  ggplot(aes(x=reorder(id, count), y=count)) + geom_bar(stat = "identity")
 
 # Será que há consenso entre as avaliações de cada reclamação?
 #  níveis de discordância X id da reclamação
-avaliacoes %>% group_by(id.reclamacao) %>% 
+avaliacoes %>% group_by(id) %>% 
   summarise(range = max(insatisfacao) - min(insatisfacao),
             mediana = median(insatisfacao)) %>% 
-  ggplot(aes(x=id.reclamacao, y=range, colour = id.reclamacao)) + geom_point() +
+  ggplot(aes(x=id, y=range, colour = id)) + geom_point() +
   geom_jitter(height = 0.05, alpha = .4)
 
 # vemos que para algums reclamações houve uma discordância de até 3 níveis de insatisfação
 # níveis de discordância X nível médio de insatisfação
 # não parece haver relação entre essas variáveis
-avaliacoes %>% group_by(id.reclamacao) %>% 
+avaliacoes %>% group_by(id) %>% 
   summarise(range = max(insatisfacao) - min(insatisfacao),
             mediana = median(insatisfacao)) %>% 
   ggplot(aes(x=mediana, y=range)) + geom_point() +
   geom_jitter(height = 0.05, alpha = .4)
 
 # a maioria das avaliações tem nível de discordância de 1 e 2
-avaliacoes %>% group_by(id.reclamacao) %>% 
+avaliacoes %>% group_by(id) %>% 
   summarise(range = max(insatisfacao) - min(insatisfacao),
             mediana = median(insatisfacao)) %>% 
   group_by(range) %>% count()
+
+# quantas reclamações tem discordância maior que 2?
+avaliacoes %>% group_by(id) %>% 
+  summarise(range = max(insatisfacao) - min(insatisfacao)) %>% 
+  filter(range > 2) %>% count()
+
+# que reclamações são essas?
+avaliacoes %>% group_by(id) %>% 
+  summarise(range = max(insatisfacao) - min(insatisfacao)) %>% 
+  filter(range > 2) %>% inner_join(reclamacoes, by = "id") %>% View()
+
+avaliacoes %>% group_by(id) %>% 
+  summarise(range = max(insatisfacao) - min(insatisfacao)) %>% 
+  filter(range > 2) %>% inner_join(reclamacoes, by = "id") %>% 
+  ggplot(aes(fill = orgao, x = reclamacao.length), na.rm = TRUE) + 
+  geom_histogram(binwidth = 60, na.rm = TRUE) + 
+  facet_grid(orgao ~ .)
+# o que fazer com essas reclamações?
   
 
 # Já vimos que as reclamações da ANAC são maiores. Outra forma de ver é através de boxplots
@@ -98,3 +116,4 @@ library(GGally)
 reclamacoes %>% 
   select(orgao, titulo.length, reclamacao.length, numero.de.capslock, mediana) %>% 
   ggpairs()
+
