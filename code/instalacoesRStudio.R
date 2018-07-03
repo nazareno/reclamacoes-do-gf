@@ -6,5 +6,6 @@ install.packages("modelr")
 install.packages("broom")
 install.packages("rvest")
 install.packages("stringr")
+install.packages("GGally")
 
 
