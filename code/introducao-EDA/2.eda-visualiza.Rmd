@@ -1,0 +1,59 @@
+---
+title: "correlações"
+author: "Raquel Lopes"
+date: "6/12/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(datasauRus)
+View(datasaurus_dozen)
+theme_set(theme_bw())
+```
+
+## DatassauRus
+
+Importância da visualização dos dados.
+* quarteto de Anscombe
+* datassauro
+
+
+
+```{r}
+datasaurus_dozen %>% 
+  group_by(dataset) %>% 
+  summarise_all(funs(mean, sd))
+```
+
+## Correlações
+
+
+```{r}
+datasaurus_dozen %>% 
+  group_by(dataset) %>% 
+  summarise(correlacao = cor(x, y))
+```
+
+## Boxplots
+
+```{r}
+datasaurus_dozen %>% 
+  group_by(dataset) %>% 
+  ggplot(aes(x = dataset, y = y)) + 
+  geom_boxplot()
+```
+
+```{r}
+ggplot(datasaurus_dozen, aes(x=x, y=y, colour=dataset))+
+  geom_point()+
+  # theme_void()+
+  theme(legend.position = "none")+
+  facet_wrap(~dataset, ncol=3)
+```
+
+
