@@ -1,0 +1,46 @@
+---
+title: "Análise de sentimentos das reclamações de órgãos do governo federal"
+output: html_notebook
+---
+
+```{r setup, warning=FALSE, include=FALSE}
+library(tidyverse)
+library(here)
+theme_set(theme_minimal())
+
+```
+
+Importando dados para um dataframe
+```{r, warning=FALSE, include=FALSE}
+avaliacao_humana = read_csv("../data/3-avaliacao-humana/avaliacoes-20181030.csv")
+```
+
+Tratando dados:
+
+- Transformar matrícula do aluno para string:
+
+```{r, warning=FALSE, include=FALSE}
+
+```
+
+Etapa 2:
+
+Pessoas que receberam a mesma reclamação classificaram igualmente?
+
+```{r, warning=FALSE, include=FALSE}
+avaliacao_humana %>% 
+    ggplot(aes(y = `ID da reclamação`,
+               x = Matrícula,
+               color = `Grau de insatisfação`)) +
+    geom_jitter()
+```
+
+Desvio padrão da nota por pessoa
+Distribuição das notas por reclamação
+
+
+Etapa 1:
+
+- Se muda a quantidade de caracteres(maior/menor) de um órgão federal para o outro
+- Verificar letras maiúsculas em cada reclamação, pontuação(!)
+
