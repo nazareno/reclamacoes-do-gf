@@ -13,6 +13,7 @@ theme_set(theme_minimal())
 Importando dados para um dataframe
 ```{r, warning=FALSE, include=FALSE}
 avaliacao_humana = read_csv("../data/3-avaliacao-humana/avaliacoes-20181030.csv")
+
 ```
 
 Tratando dados:
@@ -23,9 +24,15 @@ Tratando dados:
 
 ```
 
-Etapa 2:
+Perguntas para etapa 1: analisar as reclamações selecionadas
+1 (Alice) Se muda a quantidade de caracteres(maior/menor) de um órgão federal para o outro
+2 (Joao) Verificar letras maiúsculas em cada reclamação, pontuação(!)
 
-Pessoas que receberam a mesma reclamação classificaram igualmente?
+Perguntas para etapa 2: análise das avaliações humanas para as reclamações
+
+3 (Ivyna) Pessoas que receberam a mesma reclamação classificaram igualmente?
+4 (Antunes) Desvio padrão da nota por pessoa
+5 (Paulo) Distribuição das notas por reclamação
 
 ```{r, warning=FALSE, include=FALSE}
 avaliacao_humana %>% 
@@ -35,12 +42,5 @@ avaliacao_humana %>%
     geom_jitter()
 ```
 
-Desvio padrão da nota por pessoa
-Distribuição das notas por reclamação
 
-
-Etapa 1:
-
-- Se muda a quantidade de caracteres(maior/menor) de um órgão federal para o outro
-- Verificar letras maiúsculas em cada reclamação, pontuação(!)
-
+Obs.: índice de tendência central, sumarizar os dados
