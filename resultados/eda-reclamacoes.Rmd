@@ -31,16 +31,59 @@ Perguntas para etapa 1: analisar as reclamações selecionadas
 Perguntas para etapa 2: análise das avaliações humanas para as reclamações
 
 3 (Ivyna) Pessoas que receberam a mesma reclamação classificaram igualmente?
+
+
+```{r}
+avaliacao_humana %>% 
+    group_by(`ID da reclamação`) %>% 
+    arrange(`ID da reclamação`) %>% 
+    summarise(media_reclamacao = mean(`Grau de insatisfação`),
+              mediana_reclamacao = median(`Grau de insatisfação`),
+              desvio = sd(`Grau de insatisfação`))
+```
+
+
+
+```{r, warning=FALSE, message=FALSE}
+distribuicao_avaliacao <- function(filtro) {
+    result <- avaliacao_humana %>% 
+        filter(`ID da reclamação` %in% filtro) %>% 
+        
+        ggplot(aes(x = reorder(`ID da reclamação`, `ID da reclamação`),
+                   y = `Grau de insatisfação`,
+                   color = Matrícula)) +
+        geom_boxplot(outlier.colour = NA) + 
+        geom_jitter(width = .2, alpha = .5, height = 0.05) + 
+        labs(title = "Distribuição de notas por reclamação",
+             x = "Id da reclamação")
+    
+    return(result)
+}
+```
+
+
+```{r, warning=FALSE, message=FALSE}
+distribuicao_avaliacao(1:15)
+```
+
+```{r, warning=FALSE, message=FALSE}
+distribuicao_avaliacao(16:30)
+```
+
+
+```{r, warning=FALSE, message=FALSE}
+distribuicao_avaliacao(30:45)
+```
+
+
+```{r, warning=FALSE, message=FALSE}
+distribuicao_avaliacao(45:60)
+```
+
 4 (Antunes) Desvio padrão da nota por pessoa
 5 (Paulo) Distribuição das notas por reclamação
 
-```{r, warning=FALSE, include=FALSE}
-avaliacao_humana %>% 
-    ggplot(aes(y = `ID da reclamação`,
-               x = Matrícula,
-               color = `Grau de insatisfação`)) +
-    geom_jitter()
-```
+
 
 
 Obs.: índice de tendência central, sumarizar os dados
