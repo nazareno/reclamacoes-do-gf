@@ -1,0 +1,32 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r setup, warning=FALSE, include=FALSE}
+library(tidyverse)
+library(here)
+theme_set(theme_minimal())
+
+```
+
+```{r, warning=FALSE, include=FALSE}
+reclamacoes_raw = read_csv("../data/1-reclamacoes-selecionadas/20181610-reclamacoes-selecionadas.csv")
+
+reclamacoes = reclamacoes_raw %>% 
+    mutate(comprimento = str_length(reclamacao))
+glimpse(reclamacoes)
+
+
+
+```
+###Qual a proporção do número de caracteres das reclamações de um orgão federal para outro?
+
+```{r}
+reclamacoes %>% 
+    ggplot(aes(y = orgao,
+               x = comprimento))+
+    
+    geom_bin2d()
+```
+
