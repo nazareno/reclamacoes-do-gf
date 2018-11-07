@@ -13,6 +13,7 @@ theme_set(theme_minimal())
 Importando dados para um dataframe
 ```{r, warning=FALSE, include=FALSE}
 avaliacao_humana = read_csv("../data/3-avaliacao-humana/avaliacoes-20181030.csv")
+reclamacoes = read_csv("../data/3-avaliacao-humana/reclamacoes-avaliadas-20180703.csv")
 
 ```
 
@@ -27,6 +28,11 @@ Tratando dados:
 Perguntas para etapa 1: analisar as reclamações selecionadas
 1 (Alice) Se muda a quantidade de caracteres(maior/menor) de um órgão federal para o outro
 2 (Joao) Verificar letras maiúsculas em cada reclamação, pontuação(!)
+
+```{r, warning=FALSE, include=FALSE}
+reclamacoes$numero_de_capslock <- str_count(reclamacoes$reclamacao,"\\b[A-Z]{2,}\\b")
+reclamacoes$numero_de_exclamacoes <- str_count(reclamacoes$reclamacao, "!")
+```
 
 Perguntas para etapa 2: análise das avaliações humanas para as reclamações
 
