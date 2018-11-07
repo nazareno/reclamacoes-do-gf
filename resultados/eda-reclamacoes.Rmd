@@ -48,7 +48,9 @@ avaliacao_humana %>%
               desvio = sd(`Grau de insatisfação`))
 ```
 
+Como vemos, o desvio padrão das avaliações ficou muito baixo, o que mostra uma homogeneidade nos dados. Com isso, podemos concluir que as pessoas classificaram a reclamação com o mesmo grau de instatisfação.
 
+Além disso, podemos também responder outra pergunta acerca dos dados: os classificadores humanos foram, de forma geral, inviesados a avaliarem uma reclamação como mais ou menos insatisfeita. Como o desvio padrão foi baixo, podemos inferir que os classificadores humanos concordam entre si, mostrando que não houveram pessoas, pelo menos não de maneira expressiva, que classificasse uma reclamação num maior ou menor nível de satisfação. 
 
 ```{r, warning=FALSE, message=FALSE}
 distribuicao_avaliacao <- function(filtro) {
