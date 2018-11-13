@@ -1,0 +1,59 @@
+---
+title: "Análise Exploratória dos Dados"
+author: "Agnaldo Xavier, Ariann Farias, Dayvson Nascimento, Raquel Ambrozio, Victor Araujo"
+date: "12 de novembro de 2018"
+output: html_document
+---
+
+<p></p>
+## Preparação do ambiente
+
+```{r warning=FALSE, message=FALSE}
+library(tidyverse)
+library(ggplot2)
+
+setwd("/Users/Ariann/Documents/Metodologia/2/reclamacoes-do-gf-master/")
+
+reclamacoes <- read_csv("data/1-reclamacoes-selecionadas/20181610-reclamacoes-selecionadas.csv")
+avaliacoes <- read_csv("data/3-avaliacao-humana/avaliacoes-20181030.csv")
+
+```
+```{r warning=FALSE, message=FALSE, error=FALSE}
+names(reclamacoes)
+names(avaliacoes)
+```
+
+<p></p>
+## Análise
+<p></p>
+## Relação entre nível de insatisfação e cada orgão governamental
+<p></p>
+
+```{r warning=FALSE, message=FALSE, error=FALSE}
+reclamacoes$Palavras = str_count(reclamacoes$Reclamacao,'\\w{2,}') + str_count(reclamacoes$Titulo,'\\w{2,}')
+```
+
+```{r warning=FALSE, message=FALSE, error=FALSE}
+reclamacoes %>% 
+    group_by(Orgao) %>% 
+    ggplot(aes(x = Orgao, y = Palavras)) +
+    xlab("Órgão Governamental") + ylab("Número de Palavras") +
+    geom_boxplot(aes(color = Orgao), show.legend=FALSE)
+```
+
+<p></p>
+## Relação entre o uso de caixa alta e o órgão governamental
+
+```{r warning=FALSE, message=FALSE, error=FALSE}
+reclamacoes$Palavras_CAPS = str_count(reclamacoes$Reclamacao,'\\b[A-Z]{2,}\\b') + str_count(reclamacoes$Titulo,'\\b[A-Z]{2,}\\b')
+```
+
+```{r warning=FALSE, message=FALSE, error=FALSE}
+reclamacoes %>% 
+    group_by(Orgao) %>% 
+    ggplot(aes(x = Orgao, y = Palavras_CAPS)) +
+    xlab("Órgão Governamental") + ylab("Número de Palavras em Caixa Alta") +
+    geom_boxplot(aes(color = Orgao), show.legend=FALSE)
+```
+
+<p></p>

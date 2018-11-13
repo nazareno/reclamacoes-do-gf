@@ -2,10 +2,10 @@ library(tidyverse)
 library(ggplot2)
 theme_set(theme_bw())
 
-setwd("/Users/raquelvl/Documents/GitHub/reclamacoes-do-gf/")
+setwd("C:\Users\Ariann\Documents\Metodologia\reclamacoes-do-gf/")
 
-avaliacoes <- read_csv("data/3-avaliacao-humana/avaliacoes-20180610.csv")
-reclamacoes <-  read_csv("data/1-reclamacoes-selecionadas/reclamacoes-avaliadas.csv")
+avaliacoes <- read_csv("data/3-avaliacao-humana/avaliacoes-20181030.csv")
+reclamacoes <-  read_csv("data/1-reclamacoes-selecionadas/20181610-reclamacoes-selecionadas.csv")
 
 #inserindo colunas comprimento da reclamacao e do titulo
 reclamacoes <- reclamacoes %>% mutate(reclamacao.length = str_length(reclamacao),
