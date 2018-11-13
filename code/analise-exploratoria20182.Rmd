@@ -4,6 +4,11 @@ author: "Agnaldo Xavier, Ariann Farias, Dayvson Nascimento, Raquel Ambrozio, Vic
 date: "12 de novembro de 2018"
 output: html_document
 ---
+<p></p>
+
+
+<p>Foram selecionadas 60 reclamações, sendo metade referente o Instituto Nacional do Seguro Social (INSS) e a outra metdade à Agência Nacional de Aviação Civil (ANAC) realizadas pelo portal ReclameAqui. Adicionalmente levando em consideração o experimento humano realizado com 37 alunos da disciplina sobre o nível de insatisfação da amostra de reclamações, Efetuado na disciplina de Metodologia Científica do curso de Ciência da Computação da Universidade Federal de Campina Grande (UFCG).</p>
+
 
 <p></p>
 ## Preparação do ambiente
@@ -12,7 +17,7 @@ output: html_document
 library(tidyverse)
 library(ggplot2)
 
-setwd("~/reclamacoes-do-gf/")
+setwd("C:/Users/Ariann/Documents/Metodologia/reclamacoes-do-gf/")
 
 reclamacoes <- read_csv("data/1-reclamacoes-selecionadas/20181610-reclamacoes-selecionadas.csv")
 avaliacoes <- read_csv("data/3-avaliacao-humana/avaliacoes-20181030.csv")
@@ -40,6 +45,9 @@ reclamacoes %>%
     xlab("Órgão Governamental") + ylab("Número de Palavras") +
     geom_boxplot(aes(color = Orgao), show.legend=FALSE)
 ```
+<p></p>
+
+<p> Apartir da mediana notamos que o do número de palavras por reclamação, referentes à ANAC são levemente superior. Todavia, reclamações feitas para este órgão são de tamanho mais homogêneo. Desta forma, podemos concluir que as reclamações para ambos os órgãos (ANAC e do INSS) são semelhantes na em número de palavras que cada uma contém. </p>
 
 <p></p>
 ## Será que existe relação entre o uso de caixa alta e o órgão governamental?
@@ -55,11 +63,15 @@ reclamacoes %>%
     xlab("Órgão Governamental") + ylab("Número de Palavras em Caixa Alta") +
     geom_boxplot(aes(color = Orgao), show.legend=FALSE)
 ```
+<p></p>
+
+<p> As reclamações feitas ao INSS e à ANAC ao relacionar com o uso de caixa alta, são visívelmente semelhantes. Para mais é notável que a proporção de palavras em caixa alta é pequena na amostra de reclamações avaliadas. </p>
+
 
 <p></p>
 
 ## Será que há consenso entre as avaliações de cada reclamação?
-##  níveis de discordância X id da reclamação
+
 
 
 ```{r warning=FALSE, message=FALSE, error=FALSE}
@@ -69,6 +81,8 @@ avaliacoes %>% group_by(ID_Reclamacao) %>%
   ggplot(aes(x=ID_Reclamacao, y=range, colour = ID_Reclamacao)) + geom_point() +
 geom_jitter(height = 0.05, alpha = .4)
 ```
+<p></p>
+
 <p> Vemos que para algumas reclamações houve uma discordância de até 3 níveis de insatisfação </p>
 
 <p></p>
