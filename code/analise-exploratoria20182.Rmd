@@ -12,7 +12,7 @@ output: html_document
 library(tidyverse)
 library(ggplot2)
 
-setwd("/Users/Ariann/Documents/Metodologia/2/reclamacoes-do-gf-master/")
+setwd("~/reclamacoes-do-gf/")
 
 reclamacoes <- read_csv("data/1-reclamacoes-selecionadas/20181610-reclamacoes-selecionadas.csv")
 avaliacoes <- read_csv("data/3-avaliacao-humana/avaliacoes-20181030.csv")
@@ -24,9 +24,9 @@ names(avaliacoes)
 ```
 
 <p></p>
-## Análise
+# Análise
 <p></p>
-## Relação entre nível de insatisfação e cada orgão governamental
+## Será que existe relação entre tamanho da reclamação e cada orgão governamental?
 <p></p>
 
 ```{r warning=FALSE, message=FALSE, error=FALSE}
@@ -42,7 +42,7 @@ reclamacoes %>%
 ```
 
 <p></p>
-## Relação entre o uso de caixa alta e o órgão governamental
+## Será que existe relação entre o uso de caixa alta e o órgão governamental?
 
 ```{r warning=FALSE, message=FALSE, error=FALSE}
 reclamacoes$Palavras_CAPS = str_count(reclamacoes$Reclamacao,'\\b[A-Z]{2,}\\b') + str_count(reclamacoes$Titulo,'\\b[A-Z]{2,}\\b')
@@ -57,3 +57,19 @@ reclamacoes %>%
 ```
 
 <p></p>
+
+## Será que há consenso entre as avaliações de cada reclamação?
+##  níveis de discordância X id da reclamação
+
+
+```{r warning=FALSE, message=FALSE, error=FALSE}
+avaliacoes %>% group_by(ID_Reclamacao) %>% 
+  summarise(range = max(Grau_de_Insatisfacao) - min(Grau_de_Insatisfacao),
+            mediana = median(Grau_de_Insatisfacao)) %>% 
+  ggplot(aes(x=ID_Reclamacao, y=range, colour = ID_Reclamacao)) + geom_point() +
+geom_jitter(height = 0.05, alpha = .4)
+```
+<p> Vemos que para algumas reclamações houve uma discordância de até 3 níveis de insatisfação </p>
+
+<p></p>
+
