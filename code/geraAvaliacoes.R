@@ -3,11 +3,11 @@ library(rvest)
 library(stringr)
 
 setwd("/Users/raquelvl/Documents/GitHub/reclamacoes-do-gf")
-avaliacoes <- read_csv("data/3-avaliacao-humana/avaliacoes-20180610.csv")
+avaliacoes_raw <- read_csv("data/3-avaliacao-humana/avaliacoes-20180610.csv")
 
-glimpse(avaliacoes)
+glimpse(avaliacoes_raw)
 
-avaliacoes <- avaliacoes %>% select(matricula = "Matricula", 
+avaliacoes <- avaliacoes_raw %>% select(matricula = "Matricula", 
                                     id.reclamacao = "ID da reclamação", 
                                     avaliacao = "Grau de insatisfação")
 glimpse(avaliacoes)
